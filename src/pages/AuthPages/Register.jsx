@@ -5,13 +5,15 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Register = () => {
-  const {registerWithPassword, updateUserProfile, googleLogin} = useAuth()
+  const { registerWithPassword, updateUserProfile, googleLogin } = useAuth();
   const [imgLoading, setImgLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
   const {
     register,
@@ -20,48 +22,61 @@ const Register = () => {
     reset,
   } = useForm();
 
+  const uploadImageToImgBB = async (imageFile) => {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    const res = await fetch(
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+    const imgData = await res.json();
+    return imgData?.data?.url || "";
+  };
+
   // password login functionality
   const handleRegister = async (data) => {
-    setImgLoading(true)
-    const { name, email, image, password } = data;
-    // Upload image to imgBB
-    const imageFile = image[0]
-    const formData = new FormData()
-    formData.append("image", imageFile)
+    setImgLoading(true);
     try {
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`, {
-        method: 'POST',
-        body: formData
-      })
-      const imgData = await res.json();
-      const uploadedUrl = imgData?.data?.url || "";
+      const { name, email, image, password } = data;
+      const imageFile = image[0];
+
+      const uploadedUrl = await uploadImageToImgBB(imageFile);
       const registerUser = await registerWithPassword(email, password);
-      // console.log(registerUser)
-      if (registerUser?.user) {
-        // update user profile with name and image
-        navigate(location?.state || "/")
-        await updateUserProfile(name, uploadedUrl);
-        toast.success("User registered successfully!");
+      if (!registerUser?.user) {
+        toast.error("Registration failed!");
+        return;
       }
-      // console.log(user);
+
+      await updateUserProfile(name, uploadedUrl);
+      await axiosSecure.post(`/users`, {
+        name,
+        email,
+        image: uploadedUrl,
+      });
+      navigate(location?.state || "/");
+      toast.success("User registered successfully!");
     } catch (error) {
-      toast.error(error)
+      const message = error?.message || "Registration failed!";
+      toast.error(message);
+    } finally {
+      setImgLoading(false);
+      reset();
     }
-    setImgLoading(false);
-    reset();
   };
 
   // google loin functionality
   const handleGoogleLog = async () => {
     const result = await googleLogin();
     if (result?.user) {
-      navigate(location?.state || "/")
-      toast.success("Register using Google Successful!")
+      navigate(location?.state || "/");
+      toast.success("Register using Google Successful!");
     } else {
-      toast.error("Registration failed!")
+      toast.error("Registration failed!");
     }
-  }
- 
+  };
 
   return (
     <section className="min-h-screen bg-white mt-10">
@@ -75,7 +90,8 @@ const Register = () => {
 
             <form
               onSubmit={handleSubmit(handleRegister)}
-              className="mt-6 space-y-4">
+              className="mt-6 space-y-4"
+            >
               <div>
                 <label className="text-sm font-medium text-gray-600">
                   Name
@@ -148,7 +164,10 @@ const Register = () => {
                 <button
                   className="absolute right-2 bottom-3"
                   onClick={() => setShowPass(!showPass)}
-                  type="button">{showPass ? <FaEyeSlash />  : <FaEye />}</button>
+                  type="button"
+                >
+                  {showPass ? <FaEyeSlash /> : <FaEye />}
+                </button>
               </div>
               {errors.password && (
                 <p className="text-red-500">{errors.password.message}</p>
@@ -156,14 +175,19 @@ const Register = () => {
 
               <button
                 disabled={imgLoading}
-                className="btn w-full bg-[#cfe86b] border-0 text-[#0b3b43] hover:bg-[#b8d95f]">
+                className="btn w-full bg-[#cfe86b] border-0 text-[#0b3b43] hover:bg-[#b8d95f]"
+              >
                 {imgLoading ? "Registering.." : "Register"}
               </button>
             </form>
 
             <p className="text-sm text-gray-500 mt-3">
               Already have an account?{" "}
-              <Link to="/login" state={location?.state} className="text-[#0b5b6a] font-semibold">
+              <Link
+                to="/login"
+                state={location?.state}
+                className="text-[#0b5b6a] font-semibold"
+              >
                 Login
               </Link>
             </p>
@@ -172,7 +196,8 @@ const Register = () => {
 
             <button
               onClick={handleGoogleLog}
-              className="btn btn-outline w-full">
+              className="btn btn-outline w-full"
+            >
               <span className="text-lg">G</span>
               Register with google
             </button>

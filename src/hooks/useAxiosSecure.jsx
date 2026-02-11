@@ -1,9 +1,9 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import useAuth from "./useAuth"; 
+import { useNavigate } from "react-router";
 
 const axiosSecure = axios.create({
-  baseURL: "https://your-api-url.com",
+  baseURL: import.meta.env.VITE_SERVER_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -35,7 +35,9 @@ const useAxiosSecure = () => {
     },
     async (error) => {
       const status = error.response ? error.response.status : null;
-
+      // if (status === 401 || status === 403) {
+      //   console.error("Unauthorized or Forbidden.");
+      // }
       if (status === 401 || status === 403) {
         // Log out the user and redirect to login
         await LogOutUser();
