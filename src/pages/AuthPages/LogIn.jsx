@@ -4,11 +4,13 @@ import authIMG from "../../assets/authImage.png";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const LogIn = () => {
   const { LoginUser, googleLogin } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
   const {
     register,
@@ -31,6 +33,11 @@ const LogIn = () => {
   const handleGoogleLog = async () => {
     const result = await googleLogin();
     if (result?.user) {
+      await axiosSecure.post("/users", {
+      name: result?.user?.displayName,
+      email: result?.user?.email,
+      image: result?.user?.photoURL
+    })
       navigate(location?.state || "/")
       toast.success("Register using Google Successful!")
     } else {

@@ -8,10 +8,13 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { Link } from "react-router";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAxios from "../../hooks/useAxios";
 
 const MyParcel = () => {
   const { user } = useAuth();
+  console.log(user)
   const axiosSecure = useAxiosSecure();
+  const axios = useAxios();
 
   const {
     data: myParcels = [],
