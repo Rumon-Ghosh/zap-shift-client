@@ -71,6 +71,11 @@ const Register = () => {
   const handleGoogleLog = async () => {
     const result = await googleLogin();
     if (result?.user) {
+      await axiosSecure.post("/users", {
+        name: result?.user?.displayName,
+        email: result?.user?.email,
+        image: result?.user?.photoURL,
+      });
       navigate(location?.state || "/");
       toast.success("Register using Google Successful!");
     } else {
