@@ -12,7 +12,6 @@ import useAxios from "../../hooks/useAxios";
 
 const MyParcel = () => {
   const { user } = useAuth();
-  console.log(user)
   const axiosSecure = useAxiosSecure();
   const axios = useAxios();
 

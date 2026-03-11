@@ -15,6 +15,7 @@ import DashboardHome from "../pages/DashBoardPages/DashboardHome";
 import MyParcel from "../pages/DashBoardPages/MyParcel";
 import PaymentSuccess from "../pages/DashBoardPages/PaymentSuccess";
 import MyInvoice from "../pages/DashBoardPages/MyInvoice";
+import ApproveRiders from "../pages/DashBoardPages/ApproveRiders";
 
 export const router = createBrowserRouter([
   // PUBLIC ROUTES
@@ -66,6 +67,10 @@ export const router = createBrowserRouter([
       {
         path: "be-a-rider",
         element: <BeARider />,
+        loader: () => fetch("/warehouses.json"),
+        hydrateFallbackElement: (
+          <p className="text-center text-3xl mt-20">Loading...</p>
+        ),
       },
     ],
   },
@@ -87,7 +92,7 @@ export const router = createBrowserRouter([
       { path: "my-parcels", element: <MyParcel /> },
       { path: "payment-success", element: <PaymentSuccess></PaymentSuccess> },
       { path: "my-invoices", element: <MyInvoice></MyInvoice> },
-      // { path: "profile", element: <Profile /> },
+      { path: "approve-riders", element: <ApproveRiders></ApproveRiders> },
     ],
   },
 ]);
