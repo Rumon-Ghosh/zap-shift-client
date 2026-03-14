@@ -1,10 +1,13 @@
 import React from "react";
 import { Link, Outlet } from "react-router";
-import { FaShoppingBag } from "react-icons/fa";
+import { FaShoppingBag, FaUsers } from "react-icons/fa";
 import { LiaFileInvoiceSolid } from "react-icons/lia";
 import { FaMotorcycle } from "react-icons/fa6";
+import useRole from "../hooks/useRole";
+import Logout from "../components/Shared/Logout";
 
 const DashboardLayout = () => {
+  const { role } = useRole();
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -32,8 +35,11 @@ const DashboardLayout = () => {
               <path d="M14 10l2 2l-2 2"></path>
             </svg>
           </label>
-          <div className="px-4">
-            <Link to="/" className="text-black bg-primary px-3 py-1 rounded-md">ZapShipt</Link>
+          <div className="px-4 flex gap-1 items-center">
+            <Link to="/" className="text-black bg-primary px-4 py-2 rounded-md">
+              Home Page
+            </Link>
+            <Logout></Logout>
           </div>
         </nav>
         {/* Page content here */}
@@ -75,42 +81,63 @@ const DashboardLayout = () => {
                 <span className="is-drawer-close:hidden">Dashboard Home</span>
               </Link>
             </li>
-            <li>
-              <Link
-                to="/dashboard/my-parcels"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="My Parcels"
-              >
-                {/* My-Parcel icon */}
-                <FaShoppingBag size={15} />
-                <span className="is-drawer-close:hidden">My Parcels</span>
-              </Link>
-            </li>
-            {/* link */}
-            <li>
-              <Link
-                to="/dashboard/my-invoices"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="My Invoices"
-              >
-                {/* My-Invoice icon */}
-                <LiaFileInvoiceSolid size={15} />
-                <span className="is-drawer-close:hidden">My Invoices</span>
-              </Link>
-            </li>
-            {/* link */}
-            <li>
-              <Link
-                to="/dashboard/approve-riders"
-                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Approve Riders"
-              >
-                {/* rider icon */}
-                <FaMotorcycle size={15}/>
-                <span className="is-drawer-close:hidden">Approve Riders</span>
-              </Link>
-            </li>
-
+            {role === "user" && (
+              <>
+                <li>
+                  <Link
+                    to="/dashboard/my-parcels"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="My Parcels"
+                  >
+                    {/* My-Parcel icon */}
+                    <FaShoppingBag size={15} />
+                    <span className="is-drawer-close:hidden">My Parcels</span>
+                  </Link>
+                </li>
+                {/* link */}
+                <li>
+                  <Link
+                    to="/dashboard/my-invoices"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="My Invoices"
+                  >
+                    {/* My-Invoice icon */}
+                    <LiaFileInvoiceSolid size={15} />
+                    <span className="is-drawer-close:hidden">My Invoices</span>
+                  </Link>
+                </li>
+              </>
+            )}
+            {role === "admin" && (
+              <>
+                {/* link */}
+                <li>
+                  <Link
+                    to="/dashboard/approve-riders"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Approve Riders"
+                  >
+                    {/* rider icon */}
+                    <FaMotorcycle size={15} />
+                    <span className="is-drawer-close:hidden">
+                      Approve Riders
+                    </span>
+                  </Link>
+                </li>
+                {/* link */}
+                <li>
+                  <Link
+                    to="/dashboard/manage-users"
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="Manage-Users"
+                  >
+                    {/* rider icon */}
+                    <FaUsers size={15} />
+                    <span className="is-drawer-close:hidden">Manage-Users</span>
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

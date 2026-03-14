@@ -4,7 +4,7 @@ const AboutUs = () => {
   return (
     <div className="w-11/12 mx-auto my-10">
       <h2 className="text-4xl font-bold">About Us</h2>
-      <p className="text-lg my-4">
+      <p className="text-lg my-4 max-w-180">
         Enjoy fast, reliable parcel delivery with real-time tracking and zero
         hassle. From personal packages to business shipments — we deliver on
         time, every time.

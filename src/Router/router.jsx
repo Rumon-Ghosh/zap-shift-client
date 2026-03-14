@@ -16,6 +16,8 @@ import MyParcel from "../pages/DashBoardPages/MyParcel";
 import PaymentSuccess from "../pages/DashBoardPages/PaymentSuccess";
 import MyInvoice from "../pages/DashBoardPages/MyInvoice";
 import ApproveRiders from "../pages/DashBoardPages/ApproveRiders";
+import ManageUsers from "../pages/DashBoardPages/ManageUsers";
+import AdminRoute from "./AdminRoute";
 
 export const router = createBrowserRouter([
   // PUBLIC ROUTES
@@ -92,7 +94,8 @@ export const router = createBrowserRouter([
       { path: "my-parcels", element: <MyParcel /> },
       { path: "payment-success", element: <PaymentSuccess></PaymentSuccess> },
       { path: "my-invoices", element: <MyInvoice></MyInvoice> },
-      { path: "approve-riders", element: <ApproveRiders></ApproveRiders> },
+      { path: "approve-riders", element: <AdminRoute><ApproveRiders></ApproveRiders></AdminRoute> },
+      { path: "manage-users", element: <AdminRoute><ManageUsers></ManageUsers></AdminRoute> },
     ],
   },
 ]);

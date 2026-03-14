@@ -1,22 +1,11 @@
 import React from "react";
 import Logo from "../Logo/Logo";
-import { Link, NavLink, useNavigate } from "react-router";
+import { Link, NavLink } from "react-router";
 import useAuth from "../../hooks/useAuth";
-import toast from "react-hot-toast";
+import Logout from "./Logout";
 
 const Navbar = () => {
-  const { user, LogOutUser } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogOut = async () => {
-    try {
-      await LogOutUser();
-      navigate("/");
-    } catch (error) {
-      toast.error("Error at signout");
-      console.log(error);
-    }
-  };
+  const { user } = useAuth();
 
   const links = (
     <>
@@ -75,11 +64,9 @@ const Navbar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{links}</ul>
       </div>
-      <div className="navbar-end space-x-4">
+      <div className="navbar-end space-x-2 lg:space-x-4">
         {user ? (
-          <button onClick={handleLogOut} className="btn btn-outline">
-            LogOut
-          </button>
+          <Logout></Logout>
         ) : (
           <Link to="login" className="btn btn-outline">
             Login

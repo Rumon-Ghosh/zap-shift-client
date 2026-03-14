@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { Link } from "react-router";
 
 const MyInvoice = () => {
   const { user } = useAuth();
@@ -20,6 +21,15 @@ const MyInvoice = () => {
   if (isLoading) {
     return <p className="text-center mt-10">Loading invoices...</p>;
   }
+
+  if (invoices.length === 0) return (
+    <div>
+      <h4 className="text-4xl font-bold my-4">Please Pay To Get Invoice !!</h4>
+      <button className="btn btn-primary text-black">
+        <Link to={`/send-parcel`}>Send A Parcael</Link>
+      </button>
+    </div>
+  )
 
   return (
     <div>

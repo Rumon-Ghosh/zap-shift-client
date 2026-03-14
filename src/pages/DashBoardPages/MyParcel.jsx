@@ -72,6 +72,15 @@ const MyParcel = () => {
 
   if (isLoading) return <div className="text-center mt-20">Loading...</div>;
 
+  if (myParcels.length === 0) return (
+    <div>
+      <h4 className="text-4xl font-bold my-4">Please Send Your First Parcel !!</h4>
+      <button className="btn btn-primary text-black">
+        <Link to={`/send-parcel`}>Send A Parcael</Link>
+      </button>
+    </div>
+  )
+
   return (
     <div>
       <h3 className="text-3xl font-semibold mb-4">
